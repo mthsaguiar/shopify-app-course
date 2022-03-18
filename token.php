@@ -1,5 +1,5 @@
 <?php
-
+include_once("includes/mysql_connect.php");
 $api_key = '73ded20a3030dff6210634b5130e6110';
 $secret_key = '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';
 $parameters = $_GET;
@@ -28,6 +28,13 @@ if(hash_equals($hmac, $new_hmac)){
     $response = json_decode($response, true);
 
     echo print_r($response);
+
+    $query = "INSERT INTO shops (shop_url, access_token, install_date) VALUES ('" . $shop_url . "','" . $response['access_token'] . "', NOW()) ON DUPLICATE KEY UPDATE access_token='". $response['access_token'] ."'";
+    if($mysql -> query($query)){
+        header("Location: https://" . $shop_url . '/admin/apps');
+        exit();
+    }
+
 }else{
     echo('This is not coming from Shopify and probably someone is trying to hacking');
 }
