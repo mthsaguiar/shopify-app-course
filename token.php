@@ -31,8 +31,8 @@ if(hash_equals($hmac, $new_hmac)){
 
     $query = "INSERT INTO shops (shop_url, access_token, install_date) VALUES ('" . $shop_url . "','" . $response['access_token'] . "', NOW()) ON DUPLICATE KEY UPDATE access_token='". $response['access_token'] ."'";
     if($mysql -> query($query)){
-        header("Location: https://" . $shop_url . '/admin/apps');
-        exit();
+        echo "<script>top.window.location = 'https://'" . $shop_url . "/admin/apps'</script>";
+        die;
     }
 
 }else{
