@@ -44,7 +44,7 @@ class Shopify {
         }
         if($method != "GET" && in_array($method, array('POST', 'PUT'))){
             if(is_array($query)) $query = http_build_query($query);
-            curl_setopt($curl, CURL_POSTFIELDS, $query);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
         }
 
         $response = curl_exec($curl);
@@ -57,8 +57,6 @@ class Shopify {
             return $error_msg;
         } else{
             $response = preg_split("/\r\n\r\n|\n\n|\r\r/", $response, 2);
-
-            // echo print_r($response);
 
             $headers = array();
             $headers_content = explode("\n", $response[0]);
