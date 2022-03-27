@@ -8,6 +8,23 @@ $parameters = $_GET;
 include_once("includes/check_token.php");
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    if(isset($_POST['product_title']) && isset($_POST['product_body_html']) && $_POST['action_type'] == 'create_product'){
+        $product_data = array(
+            "product" => array(
+                "title" => $_POST['product_title'],
+                "body_html" => $_POST['product_body_html']
+            )
+        );
+
+        $create_product = $shopify->rest_api('/admin/api/2022-01/products.json', $product_data, 'POST');
+        $create_product = json_decode($create_product['body'], true);
+
+        echo print_r($create_product);
+
+
+    }
+
     if(isset($_POST['delete_id']) && $_POST['action_type'] == 'delete'){
         $delete = $shopify->rest_api('/admin/api/2022-01/products/' . $_POST['delete_id'] . '.json', array(), 'DELETE');
         $delete = json_decode($delete['body'], true);
@@ -37,6 +54,31 @@ $products = json_decode($products['body'], true);
 ?>
 
 <?php include_once("header.php"); ?>
+
+<section>
+    <aside>
+        <h2>Create new product</h2>
+        <p>Fill out the following form and click the submit button to create a new product.</p>
+        </aside>
+    <article>
+        <div class="card">
+            <form action="" method="POST">
+                <input type="hidden" name="action_type" value="create_product">
+                <div class="row">
+                    <label for="productTitle">Title</label>
+                    <input type="text" name="product_title" id="productTitle">
+                </div>
+                <div class="row">
+                    <label for="productDesc">Description</label>
+                    <textarea type="text" name="product_body_html" id="productDesc"></textarea>
+                </div>
+                <div class="row">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </article>
+</section>
 
 <section>
     <table>
